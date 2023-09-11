@@ -77,5 +77,5 @@ Simply change the `ascii()` function to echo something different. Some examples 
  |    `.       | `' \Zq
 _)      \.___.,|     .'
 \____   )MMMMMP|   .'
-     `-'       `--' hjm
+     `-'       `--'
 ```
