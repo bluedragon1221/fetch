@@ -1,0 +1,61 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# CONFIG
+sep="  "
+icon_color="\033[94m"
+info_color=""
+reset="\x1b[0m"
+
+main(){
+    echo "Software ━━━━━━━━━━━━━━━━━━━━━━━━━┅"
+    item   "$distro"
+    item   "$kernel"
+    item   "$display_server"
+    item   "$term"
+    item   "$font"
+    item 󰉼  "$theme"
+    item 󰊠  "$packages"
+    item 󰅐  "$uptime"
+    echo "Hardware ━━━━━━━━━━━━━━━━━━━━━━━━━┅"
+    item 󰌢  "Lenovo Yoga 730-13\""
+    item 󰍛  "$cpu"
+    item 󰟖  "$memory"
+}
+
+ascii(){
+    cat << EOF
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣷⣤⣙⢻⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡄⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⡿⠛⠛⠿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⠏⠀⠀⠀⠀⠙⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⠿⣆⠀⠀⠀⠀
+⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣷⣦⡀⠀⠀⠀
+⠀⢀⣾⣿⣿⠿⠟⠛⠋⠉⠉⠀⠀⠀⠀⠀⠀⠉⠉⠙⠛⠻⠿⣿⣿⣷⡀⠀
+⣠⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⣄
+EOF
+}
+
+distro=$(. /etc/os-release; echo "$NAME")
+kernel=$(uname -r)
+display_server="$XDG_SESSION_TYPE"
+term=$TERM
+font=$(gsettings get org.gnome.desktop.interface monospace-font-name)
+theme=$(gsettings get org.gnome.desktop.interface gtk-theme)
+packages=$(pacman -Q | wc -l)
+uptime=$(uptime -p)
+cpu=$(lscpu --parse=MODELNAME | uniq | grep -v "#")
+memory=$(free -h | grep "Mem: " | awk '{print $2}')
+item(){
+    icon=$1
+    info=$2
+    echo -e "${icon_color}$icon${reset}" "$sep" "${info_color}$info${reset}"
+}
+
+echo -e "$(paste <(ascii) <(main))"
