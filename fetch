@@ -19,7 +19,7 @@ main(){
     item 󰊠  "$packages"
     item 󰅐  "$uptime"
     echo "Hardware ━━━━━━━━━━━━━━━━━━━━━━━━━┅"
-    item 󰌢  "Lenovo Yoga 730-13\""
+    item 󰌢  "$device"
     item 󰍛  "$cpu"
     item 󰟖  "$memory"
 }
@@ -50,6 +50,7 @@ font=$(gsettings get org.gnome.desktop.interface monospace-font-name)
 theme=$(gsettings get org.gnome.desktop.interface gtk-theme)
 packages=$(pacman -Q | wc -l)
 uptime=$(uptime -p)
+device=$(cat /sys/devices/virtual/dmi/id/product_version)
 cpu=$(lscpu --parse=MODELNAME | uniq | grep -v "#")
 memory=$(free -h | grep "Mem: " | awk '{print $2}')
 item(){
